@@ -2,29 +2,27 @@
 FROM debian:buster
 
 # # Set the working directory.
-WORKDIR ./root
+# WORKDIR ./root
 
 # # Copy the file from your host to your current location.
-COPY srcs .
+#COPY srcs .
 
 # # Run the command inside your image filesystem.
-RUN \ 
-apt-get update -y && \
-apt-get -y upgrade && \
-apt-get install -y nginx && \
-apt-get install -y wordpress
-#apt-get install -y mariadb
+RUN apt-get update -y
 
+# NGINX
+RUN apt-get -y install nginx
+COPY ./srcs/nginx.conf /usr/local/nginx/conf
 
-RUN nginx
+# WORDPRESS
+#apt-get install -y wordpress
+#apt-get install -y mariadb-server mariadb-client
+
+#RUN nginx
 #sed -e 's/# \.*multiverse$\)/\1\g' /etc/apt/sources.list 
-#apt-get install -y nginx && \
-#apt-get install -y nginx && \
-
-
 
 # # Inform Docker that the container is listening on the specified port at runtime.
-EXPOSE 80
+#EXPOSE 80 443
 
 # # Run the specified command within the container.
 #CMD ["echo", "hello world"]
@@ -34,3 +32,5 @@ EXPOSE 80
 
 #CMD ["/script.sh"]
 #CMD [bash]
+
+# service nginx start    (nginx start)

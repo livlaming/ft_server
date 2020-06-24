@@ -18,12 +18,12 @@ RUN apt-get -y install \
     php-common php7.3-cli php7.3-common \
     php7.3-json php7.3-opcache php7.3-readline
     # mariadb-server mariadb-client \
-    wget
+    # wget
 
 # NGINX
 # RUN service nginx start
 # ADD command instead of copy?
-COPY srcs/nginx.conf /usr/local/nginx/conf
+# COPY srcs/nginx.conf /usr/local/nginx/conf
 
 # MARIADB
 # RUN service mysql start

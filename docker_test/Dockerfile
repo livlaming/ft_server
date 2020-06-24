@@ -8,19 +8,31 @@ FROM debian:buster
 #COPY srcs .
 
 # # Run the command inside your image filesystem.
-RUN apt-get update -y
+RUN apt-get update -y && apt-get upgrade -y
+
+# instal all 
+RUN apt-get -y install \
+    nginx \
+    # php-fpm php-mysql \
+    # mariadb-server mariadb-client \
+    wget
 
 # NGINX
-RUN apt-get -y install nginx
-#COPY ./srcs/nginx.conf /usr/local/nginx/conf
-
-# MYSQL
-# RUN apt-get -y install mySQL
+# RUN service nginx start
+# ADD command instead of copy?
+COPY srcs/nginx.conf /usr/local/nginx/conf
 
 # MARIADB
-RUN apt-get -y install mariadb-server
+# RUN service mysql start
+
+
+# PHP
+# RUN apt-get install php-fpm php-mysql
 
 # WORDPRESS
+RUN wget https://wordpress.org/latest.tar.gz
+RUN tar -xzvf latest.tar.gz
+
 # RUN apt-get install -y wordpress
 #apt-get install -y mariadb-server mariadb-client
 
@@ -31,12 +43,15 @@ RUN apt-get -y install mariadb-server
 #CMD ["echo", "hello world"]
 
 # # Copy the rest of your app's source code from your host to your image filesystem.
-#COPY script.sh /script.sh
+# COPY script.sh /script.sh
 
-#CMD ["/script.sh"]
-#CMD [bash]
+COPY srcs/script.sh ~/script.sh
 
-# service nginx start
+# ENTRYPOINT ["/bin/bash", "~/script.sh"] of 
+CMD ["~/script.sh"]
+
 # service nginx enable
+
+# service mysql start   (starts mariadb)
 
 # chown www-data:www-data /usr/share/nginx/html/ -R

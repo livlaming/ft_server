@@ -14,8 +14,11 @@ RUN apt-get update -y
 RUN apt-get -y install nginx
 #COPY ./srcs/nginx.conf /usr/local/nginx/conf
 
+# MYSQL
+# RUN apt-get -y install mySQL
+
 # MARIADB
-RUN apt-get -y install mariadb-server
+# RUN apt-get -y install mariadb-server
 
 # WORDPRESS
 RUN apt-get install -y wordpress
@@ -25,11 +28,9 @@ RUN apt-get install -y wordpress
 # WORDPRESS
 RUN apt 
 
-#RUN nginx
-#sed -e 's/# \.*multiverse$\)/\1\g' /etc/apt/sources.list 
 
 # # Inform Docker that the container is listening on the specified port at runtime.
-#EXPOSE 80 
+EXPOSE 80 
 
 # # Run the specified command within the container.
 #CMD ["echo", "hello world"]
@@ -40,7 +41,7 @@ RUN apt
 #CMD ["/script.sh"]
 #CMD [bash]
 
-# service nginx start    (nginx start)
-# service nginx enable
+service nginx start    (nginx start)
+service nginx enable
 
 # chown www-data:www-data /usr/share/nginx/html/ -R

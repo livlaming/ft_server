@@ -2,7 +2,7 @@
 FROM debian:buster
 
 # # Set the working directory.
-# WORKDIR ./root
+# WORKDIR root/var/www/
 
 # # Copy the file from your host to your current location.
 #COPY srcs .
@@ -14,6 +14,9 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get -y install \
     nginx \
     # php-fpm php-mysql \
+    php7.3 php7.3-fpm php7.3-mysql \
+    php-common php7.3-cli php7.3-common \
+    php7.3-json php7.3-opcache php7.3-readline
     # mariadb-server mariadb-client \
     wget
 

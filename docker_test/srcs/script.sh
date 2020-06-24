@@ -2,7 +2,7 @@
 
 service nginx start
 # service mariadb-server start
-# service php start
+# service php start  
 # /bin/bash
 # tail -f/dev/null
 

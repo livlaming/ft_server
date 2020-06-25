@@ -30,9 +30,7 @@ RUN apt-get update && apt-get -y install \
 
 # NGINX
 # ADD command instead of copy?
-# COPY ./srcs/nginx.conf .
-RUN cp ./nginx.conf /etc/nginx/sites-available/localhost && \
-    ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/localhost
+# COPY ./srcs/nginx.conf . 
 # RUN service nginx enable
 
 #/usr/local/nginx/conf
@@ -56,6 +54,10 @@ RUN wget https://wordpress.org/latest.tar.gz && \
 
 # cp ./wp-config.php . ?
 
+# CONFIG NGINX FOR WORDPRESS && enable the newly created virtual block
+RUN cp ./nginx.conf /etc/nginx/sites-available/localhost && \
+    ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/localhost && \
+    cp ./wordpress.conf /etc/nginx/sites-available/ 
 
 # # Inform Docker that the container is listening on the specified port at runtime.
 EXPOSE 80 
@@ -66,7 +68,7 @@ EXPOSE 80
 # # Copy the rest of your app's source code from your host to your image filesystem.
 # COPY script.sh /script.sh
 
-# CMD service nginx start && service mysql start && service php7.3-fpm start
+CMD service nginx start && service mysql start && service php7.3-fpm start 
 
 # service nginx enable
 

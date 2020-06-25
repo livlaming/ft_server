@@ -55,24 +55,21 @@ RUN wget https://wordpress.org/latest.tar.gz && \
 # cp ./wp-config.php . ?
 
 # CONFIG NGINX FOR WORDPRESS && enable the newly created virtual block
-RUN cp ./nginx.conf /etc/nginx/sites-available/localhost && \
-    ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/localhost && \
-    cp ./wordpress.conf /etc/nginx/sites-available/ 
+RUN ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled/
+
+RUN cp ./wordpress.conf /etc/nginx/sites-available/ 
+
+# RUN cp ./nginx.conf /etc/nginx/sites-available/
+
 
 # # Inform Docker that the container is listening on the specified port at runtime.
-EXPOSE 80 
+# EXPOSE 80 
 
-# # Run the specified command within the container.
-#CMD ["echo", "hello world"]
 
 # # Copy the rest of your app's source code from your host to your image filesystem.
 # COPY script.sh /script.sh
 
-CMD service nginx start && service mysql start && service php7.3-fpm start 
-
-# service nginx enable
-
-# service mysql start   (starts mariadb)
+CMD service nginx restart && service mysql start && service php7.3-fpm start 
 
 # chown www-data:www-data /usr/share/nginx/html/ -R
 

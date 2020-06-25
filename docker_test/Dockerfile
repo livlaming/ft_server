@@ -41,17 +41,18 @@ RUN cp ./default /etc/nginx/sites-enabled/
 # CONFIG NGINX FOR WORDPRESS && enable the newly created virtual block
 RUN cp ./wordpress.conf /etc/nginx/sites-available && \
     ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled
-    
+
 RUN cp ./nginx.conf /etc/nginx/sites-available
 
 # # Inform Docker that the container is listening on the specified port at runtime.
-EXPOSE 80
+# EXPOSE 80
 
 # # Copy the rest of your app's source code from your host to your image filesystem.
 # COPY script.sh /script.sh
 CMD service nginx start && service mysql start && service php7.3-fpm start bash
 
 
+# CMD ["nginx", "-g", "daemon off;"]
 # onzekerheden
 # chown www-data:www-data /usr/share/nginx/html/ -R
 

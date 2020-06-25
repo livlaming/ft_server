@@ -1,7 +1,7 @@
 #!/bin/bash
 
 service nginx start
-# service mariadb-server start
+# service mysql start
 # service php start  
 # /bin/bash
 # tail -f/dev/null

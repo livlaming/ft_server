@@ -50,10 +50,11 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.
 
 # WORDPRESS
 RUN wget https://wordpress.org/latest.tar.gz && \
-    tar -xvf latest.tar.gz
-    # cp wp-config-sample.php wp-config.php
-    cp ./wp-config.php /var/www/html/wordpress
+    tar -xvf latest.tar.gz && \
+    cp ./wp-config.php /var/www/html/wordpress && \
     chown -R www-data:www-data /var/www/html/wordpress
+
+# cp ./wp-config.php . ?
 
 
 # # Inform Docker that the container is listening on the specified port at runtime.

@@ -12,31 +12,12 @@ COPY srcs .
 RUN apt-get update && apt-get -y install \
     nginx \
     php-fpm php-mysql \
+    php-mbstring \
+	php-gd \
     mariadb-server mariadb-client \
-    # php-cgi \
-	# php-common \
-	# php-fpm \
-	# php-pear \
-	# php-mbstring \
-	# php-zip \
-	# php-net-socket \
-	# php-gd \
-	# php-xml-util \
-	# php-gettext \
-	# php-mysql \
-	# php-bcmath \
-    #mariadb-client?
     wget
 
-# NGINX
-# ADD command instead of copy?
-# COPY ./srcs/nginx.conf . 
-# RUN service nginx enable
-
-#/usr/local/nginx/conf
-
-# MARIADB
-#COPY ./srcs/mariadb.sql .
+# Mariadb 
 RUN service mysql start && mysql < ./mariadb.sql
 
 # PHP
@@ -44,33 +25,34 @@ RUN cp ./php.ini /etc/php/7.3/fpm/php.ini
 
 # phpMyadmin
 RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.tar.gz && \
-    tar -xvf phpMyAdmin-5.0.2-english.tar.gz
+    tar -xvf phpMyAdmin-5.0.2-english.tar.gz && \
+    rm phpMyAdmin-5.0.2-english.tar.gz
 
 # WORDPRESS
 RUN wget https://wordpress.org/latest.tar.gz && \
     tar -xvf latest.tar.gz && \
+    rm latest.tar.gz && \
     cp ./wp-config.php /var/www/html/wordpress && \
     chown -R www-data:www-data /var/www/html/wordpress
 
-# cp ./wp-config.php . ?
+# DEFAULT
+RUN cp ./default /etc/nginx/sites-enabled/
 
 # CONFIG NGINX FOR WORDPRESS && enable the newly created virtual block
-RUN ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled/
-
-RUN cp ./wordpress.conf /etc/nginx/sites-available/ 
-
-# RUN cp ./nginx.conf /etc/nginx/sites-available/
-
+RUN cp ./wordpress.conf /etc/nginx/sites-available && \
+    ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled
+    
+RUN cp ./nginx.conf /etc/nginx/sites-available
 
 # # Inform Docker that the container is listening on the specified port at runtime.
-# EXPOSE 80 
-
+EXPOSE 80
 
 # # Copy the rest of your app's source code from your host to your image filesystem.
 # COPY script.sh /script.sh
+CMD service nginx start && service mysql start && service php7.3-fpm start bash
 
-CMD service nginx restart && service mysql start && service php7.3-fpm start 
 
+# onzekerheden
 # chown www-data:www-data /usr/share/nginx/html/ -R
 
 
@@ -78,3 +60,5 @@ CMD service nginx restart && service mysql start && service php7.3-fpm start
 # COPY srcs/script.sh ~/script.sh
 
 # CMD ["sh", "~/script.sh"]
+
+# ADD command instead of copy?

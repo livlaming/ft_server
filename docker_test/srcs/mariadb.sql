@@ -1,7 +1,7 @@
 CREATE DATABASE wordpress;
 CREATE DATABASE phpmyadmin;
 CREATE USER 'lisa'@'localhost' identified by 'password';
-GRANT ALL PRIVILEGES ON wpdb.* TO 'lisa'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'lisa'@'localhost';
 FLUSH PRIVILEGES;
 -- GRANT ALL ON *.* TO 'phpmyadmin'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
 -- CREATE DATABASE wordpress;

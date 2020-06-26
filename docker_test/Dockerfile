@@ -13,20 +13,25 @@ RUN apt-get update && apt-get -y install \
     nginx \
     php-fpm php-mysql \
     php-mbstring \
+    # php7.3-fpm \
 	php-gd \
     mariadb-server mariadb-client \
     wget
 
-# Mariadb 
-RUN service mysql start && mysql < ./mariadb.sql
+# phpMyadmin
+RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.tar.gz && \
+    tar -xvf phpMyAdmin-5.0.2-english.tar.gz && \
+    rm phpMyAdmin-5.0.2-english.tar.gz && \
+    mv ./phpMyAdmin-5.0.2-english /usr/share/phpmyadmin && \
+    # cp -pr /usr/share/phpmyadmin/config.sample.inc.php /usr/share/phpMyAdmin/config.inc.php && \
+    cp ./config.inc.php /usr/share/phpmyadmin && \
+    chown -R www-data:www-data /usr/share/phpmyadmin
 
 # PHP
 RUN cp ./php.ini /etc/php/7.3/fpm/php.ini
 
-# phpMyadmin
-RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.tar.gz && \
-    tar -xvf phpMyAdmin-5.0.2-english.tar.gz && \
-    rm phpMyAdmin-5.0.2-english.tar.gz
+# Mariadb 
+RUN service mysql start && mysql < ./mariadb.sql
 
 # WORDPRESS
 RUN wget https://wordpress.org/latest.tar.gz && \
@@ -45,11 +50,11 @@ RUN cp ./wordpress.conf /etc/nginx/sites-available && \
 RUN cp ./nginx.conf /etc/nginx/sites-available
 
 # # Inform Docker that the container is listening on the specified port at runtime.
-# EXPOSE 80
+EXPOSE 80 443
 
 # # Copy the rest of your app's source code from your host to your image filesystem.
 # COPY script.sh /script.sh
-CMD service nginx start && service mysql start && service php7.3-fpm start bash
+CMD service nginx start && service mysql start && service php7.3-fpm start
 
 
 # CMD ["nginx", "-g", "daemon off;"]

@@ -23,7 +23,6 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.
     tar -xvf phpMyAdmin-5.0.2-english.tar.gz && \
     rm phpMyAdmin-5.0.2-english.tar.gz && \
     mv ./phpMyAdmin-5.0.2-english /usr/share/phpmyadmin && \
-    # mv -pr /usr/share/phpmyadmin/config.sample.inc.php /usr/share/phpMyAdmin/config.inc.php && \
     mv ./config.inc.php /usr/share/phpmyadmin && \
     chown -R www-data:www-data /usr/share/phpmyadmin
     # chmod 660 /var/www/html/phpmyadmin/config.inc.php

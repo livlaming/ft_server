@@ -7,18 +7,18 @@ WORKDIR /var/www/html
 # # Copy the srcs file from your host to your current location.
 COPY srcs .
 
-# # Run the command inside your image filesystem.
-# # no upgrada & no maria-db client
+# # Update & install
+# # no upgrade & no maria-db client
 RUN apt-get update && apt-get -y install \
     nginx \
     php-fpm php-mysql \
     php-mbstring \
-    # php7.3-fpm \
 	php-gd \
     mariadb-server mariadb-client \
     wget
 
-# phpMyadmin
+# # phpMyadmin 
+# # Download & config & install  phpmyadmin
 RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.tar.gz && \
     tar -xvf phpMyAdmin-5.0.2-english.tar.gz && \
     rm phpMyAdmin-5.0.2-english.tar.gz && \
@@ -48,7 +48,8 @@ RUN mv ./default /etc/nginx/sites-enabled
 RUN mv ./wordpress.conf /etc/nginx/sites-available && \
     ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled
 
-# RUN mv ./nginx.conf /etc/nginx/sites-available
+# SSL
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 
 # # Inform Docker that the container is listening on the specified port at runtime.
 EXPOSE 80 443

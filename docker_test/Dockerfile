@@ -8,7 +8,7 @@ WORKDIR /var/www/html
 COPY srcs .
 
 # # Run the command inside your image filesystem.
-# no upgrada & no maria-db client
+# # no upgrada & no maria-db client
 RUN apt-get update && apt-get -y install \
     nginx \
     php-fpm php-mysql \
@@ -23,39 +23,43 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.
     tar -xvf phpMyAdmin-5.0.2-english.tar.gz && \
     rm phpMyAdmin-5.0.2-english.tar.gz && \
     mv ./phpMyAdmin-5.0.2-english /usr/share/phpmyadmin && \
-    # cp -pr /usr/share/phpmyadmin/config.sample.inc.php /usr/share/phpMyAdmin/config.inc.php && \
-    cp ./config.inc.php /usr/share/phpmyadmin && \
+    # mv -pr /usr/share/phpmyadmin/config.sample.inc.php /usr/share/phpMyAdmin/config.inc.php && \
+    mv ./config.inc.php /usr/share/phpmyadmin && \
     chown -R www-data:www-data /usr/share/phpmyadmin
+    # chmod 660 /var/www/html/phpmyadmin/config.inc.php
 
 # PHP
-RUN cp ./php.ini /etc/php/7.3/fpm/php.ini
+RUN mv ./php.ini /etc/php/7.3/fpm/php.ini
 
 # Mariadb 
-RUN service mysql start && mysql < ./mariadb.sql
+RUN service mysql start && \
+    mysql < ./mariadb.sql
 
 # WORDPRESS
 RUN wget https://wordpress.org/latest.tar.gz && \
     tar -xvf latest.tar.gz && \
     rm latest.tar.gz && \
-    cp ./wp-config.php /var/www/html/wordpress && \
+    mv ./wp-config.php /var/www/html/wordpress && \
     chown -R www-data:www-data /var/www/html/wordpress
 
 # DEFAULT
-RUN cp ./default /etc/nginx/sites-enabled/
+RUN mv ./default /etc/nginx/sites-enabled
 
 # CONFIG NGINX FOR WORDPRESS && enable the newly created virtual block
-RUN cp ./wordpress.conf /etc/nginx/sites-available && \
+RUN mv ./wordpress.conf /etc/nginx/sites-available && \
     ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled
 
-RUN cp ./nginx.conf /etc/nginx/sites-available
+RUN mv ./nginx.conf /etc/nginx/sites-available
 
 # # Inform Docker that the container is listening on the specified port at runtime.
 EXPOSE 80 443
 
 # # Copy the rest of your app's source code from your host to your image filesystem.
 # COPY script.sh /script.sh
-CMD service nginx start && service mysql start && service php7.3-fpm start
+CMD service nginx start && service mysql start && service php7.3-fpm start && bash
+# bash of tail -f /dev/null om de container te laten runnen
 
+# CMD service php7.3-fpm start
 
 # CMD ["nginx", "-g", "daemon off;"]
 # onzekerheden

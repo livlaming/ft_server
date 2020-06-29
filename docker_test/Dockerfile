@@ -7,7 +7,7 @@ WORKDIR /var/www/html
 # # Copy the srcs file from your host to your current location.
 COPY srcs .
 
-# # Update & install
+# # 1. Update & install server
 # # no upgrade & no maria-db client
 RUN apt-get update && apt-get -y install \
     nginx \
@@ -15,7 +15,15 @@ RUN apt-get update && apt-get -y install \
     php-mbstring \
 	php-gd \
     mariadb-server mariadb-client \
-    wget
+    wget \
+    openssl
+
+# 2. installing Mariadb 
+RUN service mysql start && \
+    mysql < ./mariadb.sql
+
+# 3. configuring nginx to use the php processor
+
 
 # # phpMyadmin 
 # # Download & config & install  phpmyadmin
@@ -25,14 +33,10 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.
     mv ./phpMyAdmin-5.0.2-english /usr/share/phpmyadmin && \
     mv ./config.inc.php /usr/share/phpmyadmin && \
     chown -R www-data:www-data /usr/share/phpmyadmin
-    # chmod 660 /var/www/html/phpmyadmin/config.inc.php
+    chmod 660 /var/www/html/phpmyadmin/config.inc.php
 
-# PHP
+# overwrite php.ini from srcs-folder
 RUN mv ./php.ini /etc/php/7.3/fpm/php.ini
-
-# Mariadb 
-RUN service mysql start && \
-    mysql < ./mariadb.sql
 
 # WORDPRESS
 RUN wget https://wordpress.org/latest.tar.gz && \

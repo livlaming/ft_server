@@ -2,3 +2,7 @@
 docker build -t ft_server 
 
 docker run -it --name webserver -p80:80 -p443:443 -p110:110 ft_server
+
+The LEMP software stack is a group of software that can be used to serve dynamic web pages and web applications. 
+The name “LEMP” is an acronym that describes a Linux operating system, with an (E)Nginx web server. 
+The backend data is stored in a MariaDB database and the dynamic processing is handled by PHP. 

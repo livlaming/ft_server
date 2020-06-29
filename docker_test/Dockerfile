@@ -63,7 +63,7 @@ CMD service nginx start && service mysql start && service php7.3-fpm start && ba
 
 # CMD ["nginx", "-g", "daemon off;"]
 # onzekerheden
-# chown www-data:www-data /usr/share/nginx/html/ -R
+chown www-data:www-data /usr/share/nginx/html/ -R
 
 
 # # old run met bash command

@@ -48,7 +48,7 @@ RUN mv ./default /etc/nginx/sites-enabled
 RUN mv ./wordpress.conf /etc/nginx/sites-available && \
     ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled
 
-RUN mv ./nginx.conf /etc/nginx/sites-available
+# RUN mv ./nginx.conf /etc/nginx/sites-available
 
 # # Inform Docker that the container is listening on the specified port at runtime.
 EXPOSE 80 443

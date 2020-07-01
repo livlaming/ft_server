@@ -19,7 +19,7 @@ RUN apt-get update && apt-get -y install \
     openssl \
     sendmail
 
-# 2. create user + database with Mariadb 
+# 2. create user + database with Mariadb
 RUN service mysql start && \
     mysql < ./srcs/mariadb.sql
 

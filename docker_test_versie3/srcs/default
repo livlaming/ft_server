@@ -1,15 +1,36 @@
+
 server {
 	listen 80;
 	listen [::]:80;
 
 	server_name localhost;
-	root var/www/html;
-	# return 301 https://localhost$request_uri;
+	return 301 https://localhost$request_uri;
+}
 
-    index index.php index.html index.htm index.nginx-debian.html;
 
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-    }
+server {
+	# SSL configuration
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl on;
+	ssl_certificate /etc/ssl/certs/localhost.crt;
+	ssl_certificate_key /etc/ssl/certs/localhost.key;
+
+	server_name localhost;
+	root /var/www/html;
+
+	# Add index.php to the list if you are using PHP
+	index index.html index.htm index.nginx-debian.html index.php;
+
+	client_max_body_size 64M;
+
+	location / {
+	 	try_files $uri $uri/ =404;
+		autoindex on;
+	}
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+	}
 }

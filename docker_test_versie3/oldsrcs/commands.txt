@@ -17,6 +17,22 @@ rm -Rf ~/Library/*.42_cache_bak*; rm -Rf ~/*.42_cache_bak_*; setopt nomatch; ech
 rm -rf ~/Library/Containers/com.docker.docker
 ln -s ~/goinfre/docker ~/Library/Containers/com.docker.docker
 
+server {
+	listen 80;
+	listen [::]:80;
+
+	server_name localhost;
+	root /var/www/html;
+	# return 301 https://localhost$request_uri;
+
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+    }
+}
+
 
 
 server {

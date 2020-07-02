@@ -7,7 +7,7 @@ WORKDIR /var/www/html
 # # Copy the srcs file from your host to your current location.
 COPY srcs .
 
-# # 1. Update & install server
+# # Update & install server + mariadb + php 
 RUN apt-get update && apt-get -y install \
     nginx \
     php-fpm php-mysql \
@@ -15,38 +15,27 @@ RUN apt-get update && apt-get -y install \
 	php-gd \
     mariadb-server mariadb-client \
     wget \
-    openssl \
-    sendmail
+    openssl 
+    # sendmail
 
-# # 2. create user + database with Mariadb
+# # create user + database with Mariadb
 RUN service mysql start && \
     mysql < ./mariadb.sql
 
-RUN mv ./default /etc/nginx/sites-available/
+# # Configuring Nginx to Use the PHP Processor
+COPY ./srcs/default /etc/nginx/sites-available/default
 
-# # 3. download phpmyadmin + wordpress
+# # install Phpmyadmin
 RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.2/phpMyAdmin-5.0.2-english.tar.gz && \
     tar -xvf phpMyAdmin-5.0.2-english.tar.gz && \
     rm phpMyAdmin-5.0.2-english.tar.gz && \
-    mv ./phpMyAdmin-5.0.2-english /usr/share/phpmyadmin &&\
-    wget https://wordpress.org/latest.tar.gz && \
-    tar -xvf latest.tar.gz && \
-    rm latest.tar.gz
-    # mv ./config.inc.php /var/www/html/phpmyadmin
+    mv phpMyAdmin-5.0.2-english /var/www/html/phpmyadmin 
+    # mv config.inc.php /var/www/html/phpmyadmin/config.inc.php && \
+    # chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
+    # chown -R www-data:www-data /var/www/html/phpmyadmin && \
+    # service php7.3-fpm restart && \
+    # service nginx restart
 
-# COPY ./php.ini /etc/php/7.3/fpm/php.ini
- 
-# COPY ./wp-config.php /var/www/html/wordpress && \
-# RUN chown -R www-data:www-data /var/www/html/wordpress
-
-# RUN mv ./srcs/wordpress.conf /etc/nginx/sites-available && \
-#     ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled && \
-#     chown www-data:www-data /usr/share/nginx/html/ -R
-
-# # SSL
-# RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
-
-# # Inform Docker that the container is listening on the specified port at runtime.
-EXPOSE 80 443
+EXPOSE 80
 
 CMD service nginx start && service mysql start && service php7.3-fpm start && bash

@@ -55,11 +55,11 @@ RUN  chmod 664 /var/www/html/wp-config.php
 
 RUN chown -R www-data:www-data /var/www/
 
-# # install en use wp cli
-# RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-#     tar -xvf wp-cli.phar && \
-#     mv wp-cli.phar /var/www/html && \
-#     chmod +x wp-cli.phar
+RUN service mysql start && \
+    chmod +x /tmp/wp-cli.phar && \
+    mv /tmp/wp-cli.phar /usr/local/bin/wp && \
+	wp core install --url="https://localhost/"  --title="ft_server" --admin_user="lisa" --admin_password="password" --admin_email="livlamin@student.codam.nl" --allow-root --path="/var/www/html/"
+
 
 # SSL
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt

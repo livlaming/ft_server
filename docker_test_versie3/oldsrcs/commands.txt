@@ -17,6 +17,9 @@ rm -Rf ~/Library/*.42_cache_bak*; rm -Rf ~/*.42_cache_bak_*; setopt nomatch; ech
 rm -rf ~/Library/Containers/com.docker.docker
 ln -s ~/goinfre/docker ~/Library/Containers/com.docker.docker
 
+errorlogs :
+var/log/nginx/error.log
+
 server {
 	listen 80;
 	listen [::]:80;

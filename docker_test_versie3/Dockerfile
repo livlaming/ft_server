@@ -51,13 +51,15 @@ RUN wget https://wordpress.org/latest.tar.gz && \
     
 COPY ./srcs/wp-config.php /var/www/html/
 
+RUN  chmod 664 /var/www/html/wp-config.php
+
 RUN chown -R www-data:www-data /var/www/
 
 # # install en use wp cli
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    tar -xvf wp-cli.phar && \
-    mv wp-cli.phar /var/www/html && \
-    chmod +x wp-cli.phar
+# RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+#     tar -xvf wp-cli.phar && \
+#     mv wp-cli.phar /var/www/html && \
+#     chmod +x wp-cli.phar
 
 # SSL
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt

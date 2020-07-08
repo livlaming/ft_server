@@ -35,10 +35,10 @@ COPY ./srcs/default /etc/nginx/sites-available/default
 
 # # overwrite files from srcs-folder
 # # php.ini sets post min&max size, memory limit, execution time, time zone
-COPY ./srcs/php.ini /etc/php/7.3/fpm/php.ini
+COPY ./srcs/php.ini etc/php/7.3/fpm/php.ini
 COPY ./srcs/config.inc.php /var/www/html/phpmyadmin/config.inc.php
 COPY ./srcs/wp-config.php /var/www/html/wordpress
-COPY ./srcs/wp-cli.phar /tmp
+COPY ./srcs/wp-cli.phar tmp
 COPY ./srcs/mariadb.sql .
 
 # # create user + database with Mariadb

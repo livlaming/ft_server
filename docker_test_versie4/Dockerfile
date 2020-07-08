@@ -44,7 +44,7 @@ COPY ./srcs/mariadb.sql .
 # # create user + database with Mariadb
 RUN service mysql start && \
     mysql < ./mariadb.sql 
-    # mysql phpmyadmin < var/www/html/phpmyadmin/sql/create_tables.sql
+    # mysql phpmyadmin < /var/www/html/phpmyadmin/sql/create_tables.sql
 
 RUN chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
     chown -R www-data:www-data /var/www/html/phpmyadmin && \
@@ -56,7 +56,7 @@ RUN service mysql start && \
     mv /tmp/wp-cli.phar /usr/local/bin/wp && \
 	wp core install --url="https://localhost/wordpress"  --title="ft_server" --admin_user="lisa" --admin_password="password" --admin_email="livlamin@student.codam.nl" --allow-root --path="/var/www/html/wordpress"
 
-RUN  chmod 664 /var/www/html/wordpress/wp-config.php
+RUN chmod 664 /var/www/html/wordpress/wp-config.php
 
 RUN chown -R www-data:www-data /var/www/html/
 

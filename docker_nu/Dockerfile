@@ -1,13 +1,14 @@
+# # Use the official image as a parent image.
 FROM debian:buster
 
 WORKDIR /tmp
 
 RUN apt-get update && apt-get -y install \
-    nginx \
-        mariadb-server \
-        mariadb client
+        nginx
 
-COPY ./srcs/default /etc/nginx/sites-available
-# EXPOSE 80
+COPY ./srcs/default /etc/nginx/sites-available/default
+RUN chown -R www-data:www-data /var/www/html/
 
-ENTRYPOINT  service nginx restart
+EXPOSE 80 443
+
+ENTRYPOINT service nginx start && bash

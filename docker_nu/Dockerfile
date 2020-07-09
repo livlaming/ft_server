@@ -51,6 +51,10 @@ RUN service mysql start &&\
         # mysql phpmyadmin < var/www/html/phpmyadmin/sql/create_tables.sql
 # system ngninx restart
 
+#SSL
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
+
+
 EXPOSE 80 443
 
 ENTRYPOINT service nginx start && service mysql start && service php7.3-fpm start && bash

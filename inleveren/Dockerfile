@@ -30,7 +30,8 @@ RUN wget https://wordpress.org/latest.tar.gz && \
 # # Configuring Nginx to Use the PHP Processor
 COPY ./srcs/default /etc/nginx/sites-available/default
 # # phpmyadmin config
-COPY ./srcs/config.inc.php /var/www/html/phpmyadmin/config.inc.php
+COPY ./srcs/config.inc.php .
+COPY ./config.inc.php /var/www/html/phpmyadmin/config.inc.php
 # # wp config
 COPY ./srcs/wp-config.php /var/www/html/
 COPY ./srcs/wp-cli.phar .

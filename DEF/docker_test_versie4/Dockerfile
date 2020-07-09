@@ -4,6 +4,7 @@ FROM debian:buster
 # # Set the working directory.
 WORKDIR /tmp
 
+COPY ./srcs/* ./
 # # Update & install server + mariadb + php 
 RUN apt-get update && apt-get -y install \
     nginx \
@@ -35,11 +36,12 @@ COPY ./srcs/default /etc/nginx/sites-available/default
 
 # # overwrite files from srcs-folder
 # # php.ini sets post min&max size, memory limit, execution time, time zone
-COPY ./srcs/php.ini etc/php/7.3/fpm/php.ini
-COPY ./srcs/config.inc.php /var/www/html/phpmyadmin/config.inc.php
-COPY ./srcs/wp-config.php /var/www/html/wordpress
-COPY ./srcs/wp-cli.phar tmp
-COPY ./srcs/mariadb.sql .
+# COPY ./srcs/php.ini .
+RUN mv ./php.ini /etc/php/7.3/fpm/php.ini && \
+    mv ./config.inc.php /var/www/html/phpmyadmin/config.inc.php && \
+    mv ./wp-config.php /var/www/html/wordpress
+# COPY ./srcs/wp-cli.phar .
+# COPY ./srcs/mariadb.sql .
 
 # # create user + database with Mariadb
 RUN service mysql start && \
@@ -67,4 +69,10 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Ho
 
 EXPOSE 80 443
 
-CMD service nginx start && service mysql start && service php7.3-fpm start && service sendmail start && bash
+# CMD service nginx start && service mysql start && service php7.3-fpm start && service sendmail start && bash
+CMD service php7.3-fpm start && \
+	service nginx start && \
+	service mysql start && \
+	echo "$(hostname -i) $(hostname) $(hostname).localhost" >> /etc/hosts && \
+	service sendmail start && \
+	bash

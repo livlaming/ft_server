@@ -9,6 +9,9 @@ RUN apt-get update && apt-get -y install \
     nginx \
     php-fpm php-mysql \
     php-mbstring \
+    # php-gd \
+    # php-zip \
+    # php7.3-fpm \
     mariadb-server mariadb-client \
     wget \
     openssl \
@@ -48,7 +51,7 @@ RUN service mysql start && \
     mysql phpmyadmin < create_tables.sql
 
 RUN chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
-    # chown -R www-data:www-data /var/www/html/phpmyadmin && \
+    chown -R www-data:www-data /var/www/html/phpmyadmin && \
     service php7.3-fpm start
 
 COPY ./srcs/wp-cli.phar .
@@ -58,7 +61,7 @@ RUN service mysql start && \
 	wp core install --url="https://localhost/"  --title="ft_server" --admin_user="lisa" --admin_password="password" --admin_email="livlamin@student.codam.nl" --allow-root --path="/var/www/html"
 
 RUN chmod 664 /var/www/html/wp-config.php && \
-    chown -R www-data:www-data /var/www/
+    chown -R www-data:www-data /var/www/html
 
 # SSL
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt

@@ -29,10 +29,11 @@ RUN wget https://wordpress.org/latest.tar.gz && \
 
 # # Configuring Nginx to Use the PHP Processor
 COPY ./srcs/default /etc/nginx/sites-available/default
-# # phpmyadmin config
+# # overwrite files from srcs-folder
+# # php.ini sets post min&max size, memory limit, execution time, time zone
 COPY ./srcs/php.ini .
 RUN  mv ./php.ini /etc/php/7.3/fpm/php.ini
-
+# # phpmyadmin config
 COPY ./srcs/config.inc.php /var/www/html/phpmyadmin/config.inc.php
 
 # # wp config

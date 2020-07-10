@@ -53,6 +53,10 @@ RUN service mysql start && \
 # # SSL
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 
+# # autoindex
+RUN docker exec <container_name> bash -c "/setautoindex.sh off"
+docker exec -ti my_container sh -c "echo a && echo b"
+
 # # chown rights owner:group
 RUN chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
     chmod 664 /var/www/html/wp-config.php && \

@@ -4,15 +4,15 @@ FROM debian:buster
 # # Set the working directory.
 WORKDIR /tmp
 
+COPY ./srcs/* ./
+
 # # Update & install server + mariadb + php 
 RUN apt-get update && apt-get -y install \
     nginx \
-    php-fpm php-mysql \
+    php7.3-fpm \
+    php-mysql \
     php-mbstring \
-    # php-gd \
-    # php-zip \
-    # php7.3-fpm \
-    mariadb-server mariadb-client \
+    mariadb-server \
     wget \
     openssl \
     sendmail
@@ -30,42 +30,35 @@ RUN wget https://wordpress.org/latest.tar.gz && \
     rm latest.tar.gz && \
     mv ./wordpress/* /var/www/html
 
-# # Configuring Nginx to Use the PHP Processor
-COPY ./srcs/default /etc/nginx/sites-available/default
+# # default -> Configuring Nginx to Use the PHP Processor
 # # overwrite files from srcs-folder
 # # php.ini sets post min&max size, memory limit, execution time, time zone
-COPY ./srcs/php.ini .
-RUN  mv ./php.ini /etc/php/7.3/fpm/php.ini
-# # phpmyadmin config
-COPY ./srcs/config.inc.php /var/www/html/phpmyadmin/config.inc.php
+# # phpmyadmin config -> confif.inc 
+# # wp config ->wp-condig.php
+RUN mv ./default /etc/nginx/sites-available/default && \
+    mv ./php.ini /etc/php/7.3/fpm/php.ini && \
+    mv ./config.inc.php /var/www/html/phpmyadmin/config.inc.php && \
+    mv ./wp-config.php /var/www/html/
 
-# # wp config
-COPY ./srcs/wp-config.php /var/www/html/
-COPY ./srcs/wp-cli.phar .
-COPY ./srcs/mariadb.sql .
-
-# # create user + database with Mariadb
+# # create user + database with Mariadb + create tables
 RUN service mysql start && \
-    mysql < ./mariadb.sql &&\
-    mv /var/www/html/phpmyadmin/sql/create_tables.sql . &&\
-    mysql phpmyadmin < create_tables.sql
+    mysql < ./mariadb.sql && \
+    mysql phpmyadmin < /var/www/html/phpmyadmin/sql/create_tables.sql
 
-RUN chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
-    chown -R www-data:www-data /var/www/html/phpmyadmin && \
-    service php7.3-fpm start
-
-COPY ./srcs/wp-cli.phar .
 RUN service mysql start && \
     chmod +x /tmp/wp-cli.phar && \
     mv /tmp/wp-cli.phar /usr/local/bin/wp && \
 	wp core install --url="https://localhost/"  --title="ft_server" --admin_user="lisa" --admin_password="password" --admin_email="livlamin@student.codam.nl" --allow-root --path="/var/www/html"
 
-RUN chmod 664 /var/www/html/wp-config.php && \
-    chown -R www-data:www-data /var/www/html
-
-# SSL
+# # SSL
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 
+# # chown rights owner:group
+RUN chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
+    chmod 664 /var/www/html/wp-config.php && \
+    chown -R www-data:www-data /var/www/html
+
+# # only for documentation
 EXPOSE 80 443
 
 CMD service php7.3-fpm start && \

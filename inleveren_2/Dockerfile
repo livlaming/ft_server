@@ -5,6 +5,7 @@ FROM debian:buster
 WORKDIR /tmp
 
 COPY ./srcs/* ./
+
 # # Update & install server + mariadb + php 
 RUN apt-get update && apt-get -y install \
     nginx \
@@ -55,6 +56,7 @@ RUN chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
     # service nginx reload
 
 COPY ./srcs/wp-cli.phar .
+
 RUN service mysql start && \
     chmod +x /tmp/wp-cli.phar && \
     mv /tmp/wp-cli.phar /usr/local/bin/wp && \

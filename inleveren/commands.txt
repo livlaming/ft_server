@@ -1,4 +1,6 @@
   
+    # chown -R 755 www/var/html gives alle rights
+
 docker build -t ft_server 
 
 docker run -it --name webserver -p80:80 -p443:443 -p110:110 ft_server

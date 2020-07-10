@@ -1,9 +1,10 @@
 # Use the official image as a parent image.
 FROM debian:buster
 
-# # Set the working directory.
+# Set the working directory.
 WORKDIR /tmp
 
+# Copy the file from your host to your current location.
 COPY ./srcs/* ./
 
 # Update & install server + mariadb + php 
@@ -63,7 +64,7 @@ RUN chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
     chmod 664 /var/www/html/wp-config.php && \
     chown -R www-data:www-data /var/www/html
 
-# expose = only for documentation
+# Inform Docker that the container is listening on the specified port at runtime.
 EXPOSE 80 443
 
 CMD service php7.3-fpm start && \

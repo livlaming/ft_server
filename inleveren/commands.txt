@@ -2,8 +2,8 @@
      upload_max_filesize = 40M
 	 post_max_size = 40M
 	 
-	 docker run -d modus
-
+	 check autoindex;
+	 docker run -d -p 80:80 -p 443:443 <servername> (-d modus)
 	 docker exec <contaiinername> bash -c "/var/www/html/set_autoindex.sh off"
 
 	# chown -R 755 www/var/html gives alle rights

@@ -35,10 +35,13 @@ RUN wget https://wordpress.org/latest.tar.gz && \
 # # php.ini sets post min&max size, memory limit, execution time, time zone
 # # phpmyadmin config -> confif.inc 
 # # wp config ->wp-condig.php
+# # autoindex
 RUN mv ./default /etc/nginx/sites-available/default && \
     mv ./php.ini /etc/php/7.3/fpm/php.ini && \
     mv ./config.inc.php /var/www/html/phpmyadmin/config.inc.php && \
-    mv ./wp-config.php /var/www/html/
+    mv ./wp-config.php /var/www/html/ && \
+    mv ./set_autoindex.sh /var/www/html/ && \
+    chmod +x /var/www/html/set_autoindex.sh
 
 # # create user + database with Mariadb + create tables
 RUN service mysql start && \
@@ -53,10 +56,6 @@ RUN service mysql start && \
 # # SSL
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=NL/ST=Noord-Holland/L=Amsterdam/O=Codam/CN=123' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 
-# # autoindex
-RUN docker exec <container_name> bash -c "/setautoindex.sh off"
-docker exec -ti my_container sh -c "echo a && echo b"
-
 # # chown rights owner:group
 RUN chmod 660 /var/www/html/phpmyadmin/config.inc.php && \
     chmod 664 /var/www/html/wp-config.php && \
@@ -70,4 +69,4 @@ CMD service php7.3-fpm start && \
 	service mysql start && \
 	echo "$(hostname -i) $(hostname) $(hostname).localhost" >> /etc/hosts && \
 	service sendmail start && \
-	bash
+	tail -f /dev/null

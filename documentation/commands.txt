@@ -1,0 +1,76 @@
+  
+     upload_max_filesize = 40M
+	 post_max_size = 40M
+	 
+	 check autoindex;
+	 docker run -d -p 80:80 -p 443:443 <servername> (-d modus)
+	 docker exec <contaiinername> bash -c "/var/www/html/set_autoindex.sh off"
+
+	# chown -R 755 www/var/html gives alle rights
+
+docker build -t ft_server 
+
+docker run -it --name webserver -p80:80 -p443:443 -p110:110 ft_server
+
+The LEMP software stack is a group of software that can be used to serve dynamic web pages and web applications. 
+The name “LEMP” is an acronym that describes a Linux operating system, with an (E)Nginx web server. 
+The backend data is stored in a MariaDB database and the dynamic processing is handled by PHP. 
+
+
+alias clearhome="echo -n \"Available before:\t\"; df -h | grep $HOME | sed 's/ */:/g' | cut -d ':' -f 4; unsetopt nomatch;
+rm -Rf ~/Library/*.42_cache_bak*; rm -Rf ~/*.42_cache_bak_*; setopt nomatch; echo -n \"Available after:\t\"; df -h | grep $HOME |
+ sed 's/ */:/g' | cut -d ':' -f 4;"
+
+
+ mkdir -p ~/goinfre/docker
+rm -rf ~/Library/Containers/com.docker.docker
+ln -s ~/goinfre/docker ~/Library/Containers/com.docker.docker
+
+errorlogs :
+var/log/nginx/error.log
+
+server {
+	listen 80;
+	listen [::]:80;
+
+	server_name localhost;
+	root /var/www/html;
+	# return 301 https://localhost$request_uri;
+
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+    }
+}
+
+
+
+server {
+	# SSL configuration
+	listen 443 ssl localhost;
+	listen [::]:443 ssl localhost;
+
+	ssl on;
+	ssl_certificate /etc/ssl/certs/localhost.crt;
+	ssl_certificate_key /etc/ssl/certs/localhost.key;
+
+	root /var/www/html;
+
+	# Add index.php to the list if you are using PHP
+	index index.html index.htm index.nginx-debian.html index.php;
+
+	server_name localhost;
+	client_max_body_size 64M;
+
+	location / {
+	 	try_files $uri $uri/ =404;
+	}
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+
+	}
+
+}
